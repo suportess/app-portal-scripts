@@ -89,6 +89,46 @@
                                          ]
                       },
                       {
+                          "_id":  "req_get_estoques_consignados_busca",
+                          "_type":  "request",
+                          "parentId":  "fld_mv",
+                          "name":  "Busca Estoques com Consignados (LIKE, sem paginação)",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques/busca",
+                          "headers":  [
+                                          {
+                                              "name":  "X-API-KEY",
+                                              "value":  "{{ _.api_key }}"
+                                          }
+                                      ],
+                          "parameters":  [
+                                             {
+                                                 "name":  "busca",
+                                                 "value":  "farm"
+                                             }
+                                         ]
+                      },
+                      {
+                          "_id":  "req_get_produtos_consignados_busca",
+                          "_type":  "request",
+                          "parentId":  "fld_mv",
+                          "name":  "Busca Produtos Consignados (LIKE, sem paginação)",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques/45/produtos/busca",
+                          "headers":  [
+                                          {
+                                              "name":  "X-API-KEY",
+                                              "value":  "{{ _.api_key }}"
+                                          }
+                                      ],
+                          "parameters":  [
+                                             {
+                                                 "name":  "busca",
+                                                 "value":  "bal"
+                                             }
+                                         ]
+                      },
+                      {
                           "_id":  "req_get_saldo_lote_produto",
                           "_type":  "request",
                           "parentId":  "fld_mv",
