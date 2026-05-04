@@ -1,0 +1,12 @@
+[
+  {
+    "chave": "produto-detalhe",
+    "descricao": "Busca detalhes de um produto: flags de lote, validade e consignado",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT SN_LOTE, SN_CONTROLE_VALIDADE, SN_CONSIGNADO, CD_PRODUTO, DS_PRODUTO FROM DBAMV.PRODUTO WHERE CD_PRODUTO = :cd_produto",
+    "parametros": [
+      { "nome": "cd_produto", "tipo": "number", "obrigatorio": true }
+    ]
+  }
+]

@@ -1,0 +1,27 @@
+[
+    {
+        "chave":  "entradas-por-produto",
+        "descricao":  "Lista entradas nao-consignadas de um produto em um estoque, com saldo disponivel em lote",
+        "tipo":  "QUERY",
+        "tipoBanco":  "oracle",
+        "sql":  "SELECT DISTINCT E.CD_ENT_PRO, E.DT_ENTRADA, E.CD_FORNECEDOR, F.NM_FORNECEDOR, L.CD_LOTE, L.DT_VALIDADE, P.DS_PRODUTO, ((I.QT_ENTRADA - NVL(I.QT_DEVOLVIDA,0)) * U.VL_FATOR) QT_DISPONIVEL, DBAMV.VERIF_DS_UNID_PROD(I.CD_PRODUTO,\u0027R\u0027) AS DS_UNIDADE, DBAMV.VERIF_CD_UNID_PROD(I.CD_PRODUTO,\u0027R\u0027) AS CD_UNI_PRO FROM DBAMV.ENT_PRO E JOIN DBAMV.ITENT_PRO I ON E.CD_ENT_PRO = I.CD_ENT_PRO LEFT JOIN DBAMV.ITLOT_ENT L ON I.CD_ITENT_PRO = L.CD_ITENT_PRO JOIN DBAMV.FORNECEDOR F ON E.CD_FORNECEDOR = F.CD_FORNECEDOR JOIN DBAMV.PRODUTO P ON P.CD_PRODUTO = I.CD_PRODUTO JOIN DBAMV.UNI_PRO U ON I.CD_UNI_PRO = U.CD_UNI_PRO WHERE I.CD_PRODUTO = :cd_produto AND E.CD_ESTOQUE = :cd_estoque AND E.SN_CONSIGNADO = \u0027N\u0027 AND ((I.QT_ENTRADA - NVL(I.QT_DEVOLVIDA,0)) * U.VL_FATOR) \u003e 0 AND ((( P.SN_LOTE = \u0027S\u0027 OR P.SN_CONTROLE_VALIDADE = \u0027S\u0027) AND L.CD_ITENT_PRO IS NOT NULL AND EXISTS (SELECT 1 FROM DBAMV.LOT_PRO LP WHERE LP.CD_PRODUTO = I.CD_PRODUTO AND LP.CD_ESTOQUE = E.CD_ESTOQUE AND LP.CD_LOTE = L.CD_LOTE AND LP.QT_ESTOQUE_ATUAL \u003e 0)) OR (P.SN_LOTE = \u0027N\u0027 AND P.SN_CONTROLE_VALIDADE = \u0027N\u0027 AND EXISTS (SELECT 1 FROM DBAMV.LOT_PRO LP WHERE LP.CD_PRODUTO = I.CD_PRODUTO AND LP.CD_ESTOQUE = E.CD_ESTOQUE AND LP.QT_ESTOQUE_ATUAL \u003e 0)))",
+        "parametros":  [
+                           {
+                               "nome":  "cd_produto",
+                               "tipo":  "number",
+                               "obrigatorio":  true
+                           },
+                           {
+                               "nome":  "cd_estoque",
+                               "tipo":  "number",
+                               "obrigatorio":  true
+                           }
+                       ],
+        "paginacao":  {
+                          "paramPagina":  "page",
+                          "paramTamanhoPagina":  "pageSize",
+                          "tamanhoPaginaPadrao":  20,
+                          "tamanhoPaginaMaximo":  100
+                      }
+    }
+]

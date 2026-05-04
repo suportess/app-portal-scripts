@@ -1,0 +1,17 @@
+[
+  {
+    "key": "oracle-prod",
+    "driver": "oracle",
+    "host": "localhost",
+    "port": 1521,
+    "dbName": "XEPDB1",
+    "user": "DBAMV",
+    "password": "DBAMV",
+    "pool": {
+      "maxOpenConns": 5,
+      "maxIdleConns": 2,
+      "connMaxLifetimeSec": 90,
+      "connMaxIdleTimeSec": 30
+    }
+  }
+]

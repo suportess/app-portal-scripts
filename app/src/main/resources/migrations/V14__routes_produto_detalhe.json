@@ -1,0 +1,27 @@
+[
+  {
+    "chave": "GET-mv-produto-detalhe",
+    "caminho": "/mv/api/produtos/{cd_produto}",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": true,
+      "passos": [
+        {
+          "alias": "produto",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "produto-detalhe",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_produto", "tipo": "path", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

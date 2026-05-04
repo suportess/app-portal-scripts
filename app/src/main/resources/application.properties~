@@ -1,0 +1,14 @@
+spring.application.name=portal-scripts
+spring.main.banner-mode=off
+
+# Portal connection
+portal.url=http://localhost:8088
+portal.api-key=uuuuuuuuuuu
+portal.timeout-seconds=30
+
+# History file (caminho relativo ao diretório de execução)
+portal.history-file=portal_scripts_history.json
+
+# Logging
+logging.config=classpath:logback-spring.xml
+server.port=8031

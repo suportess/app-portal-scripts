@@ -1,0 +1,30 @@
+[
+  {
+    "chave": "GET-mv-entradas-por-produto",
+    "caminho": "/mv/api/estoques/{cd_estoque}/produtos/{cd_produto}/entradas",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "entradas",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "entradas-por-produto",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_estoque", "tipo": "path",  "extrair": false },
+              { "nome": "cd_produto", "tipo": "path",  "extrair": false },
+              { "nome": "page",       "tipo": "query", "extrair": false },
+              { "nome": "pageSize",   "tipo": "query", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

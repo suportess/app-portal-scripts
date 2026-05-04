@@ -1,0 +1,19 @@
+[
+  {
+    "chave": "estoques-consignados-listar",
+    "descricao": "Lista estoques que possuem produtos consignados com saldo para uma empresa MV",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT DISTINCT ESTOQUE.CD_ESTOQUE, ESTOQUE.DS_ESTOQUE FROM DBAMV.PRODUTO, DBAMV.LOT_PRO, DBAMV.ESTOQUE WHERE PRODUTO.SN_CONSIGNADO = 'S' AND ESTOQUE.CD_MULTI_EMPRESA = :cd_multi_empresa AND ESTOQUE.CD_ESTOQUE = LOT_PRO.CD_ESTOQUE AND PRODUTO.CD_PRODUTO = LOT_PRO.CD_PRODUTO AND NVL(LOT_PRO.QT_ESTOQUE_ATUAL, 0) > 0",
+    "ordenacao": { "nomeColuna": "ESTOQUE.DS_ESTOQUE", "decrescente": false },
+    "parametros": [
+      { "nome": "cd_multi_empresa", "tipo": "number", "obrigatorio": true }
+    ],
+    "paginacao": {
+      "paramPagina": "page",
+      "paramTamanhoPagina": "pageSize",
+      "tamanhoPaginaPadrao": 20,
+      "tamanhoPaginaMaximo": 100
+    }
+  }
+]

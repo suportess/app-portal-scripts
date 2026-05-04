@@ -1,0 +1,38 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Portal Scripts — on-premises
+#
+# Executar APÓS o portal estar no ar:
+#   cp .env.example .env   # preencha as variáveis
+#   docker compose run --rm portal-scripts
+#
+# O contêiner roda as migrations e encerra automaticamente (exit 0 ou 1).
+#
+# Variáveis obrigatórias em .env:
+#   DOCKER_USERNAME   → usuário Docker Hub (ex: suportess)
+#   IMAGE_TAG         → tag da imagem (ex: latest)
+#   PORTAL_URL        → URL do portal (ex: http://host-do-portal:8080)
+#   PORTAL_API_KEY    → chave Bearer do portal (GATEWAY_API_KEY)
+#
+# Importante — configuração do banco Oracle (V01 de databases):
+#   Antes de rodar, edite e registre manualmente a conexão Oracle no portal
+#   usando o template: src/main/resources/templates/databases_oracle.template.json
+#   ou via API: POST {PORTAL_URL}/databases
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  portal-scripts:
+    image: ${DOCKER_USERNAME:-suportess}/app-suportes-portal-scripts:${IMAGE_TAG:-latest}
+    container_name: portal-scripts
+    restart: "no"
+    env_file: .env
+    environment:
+      PORTAL_URL: ${PORTAL_URL}
+      PORTAL_API_KEY: ${PORTAL_API_KEY}
+      # Aponta o histórico para o volume persistente
+      PORTAL_HISTORY_FILE: /app/history/portal_scripts_history.json
+    volumes:
+      - portal_scripts_history:/app/history
+
+volumes:
+  portal_scripts_history:

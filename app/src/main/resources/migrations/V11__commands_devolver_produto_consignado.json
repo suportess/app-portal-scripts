@@ -1,0 +1,64 @@
+[{
+    "chave":  "devolver-produto-consignado",
+    "descricao":  "Registra devolucao de produto consignado: DEV_FOR+ITDEV_FOR (saida) e nova ENT_PRO+ITENT_PRO+ITLOT_ENT (entrada de troca)",
+    "tipo":  "ANONYMOUS",
+    "tipoBanco":  "oracle",
+    "sql":  "DECLARE v_dt DATE; v_dt_validade_dev DATE; v_dt_validade_ent DATE; v_cd_tip_doc NUMBER; v_cd_mot_dev NUMBER; v_cd_estoque NUMBER; v_cd_fornecedor NUMBER; v_nr_documento DBAMV.ENT_PRO.NR_DOCUMENTO%TYPE; v_nr_serie_orig DBAMV.ENT_PRO.NR_SERIE%TYPE; v_nr_serie_new DBAMV.ENT_PRO.NR_SERIE%TYPE; v_suffix NUMBER; v_cnt NUMBER; v_cd_uni_pro_dev NUMBER; v_cd_custo_dev NUMBER; v_sn_lote_dev CHAR(1); v_cd_itent_pro NUMBER; v_cd_uni_pro_ent NUMBER; v_cd_custo_ent NUMBER; v_sn_lote_ent CHAR(1); v_sn_val_ent CHAR(1); v_vl_unitario NUMBER; v_cd_devolucao NUMBER; v_vl_total_dev NUMBER; v_cd_ent_pro_new NUMBER; v_cd_itent_new NUMBER; v_cd_itlot_new NUMBER; BEGIN v_dt := TO_DATE(:dt_devolucao, \u0027YYYY-MM-DD\u0027); IF :dt_validade_dev IS NOT NULL THEN v_dt_validade_dev := TO_DATE(:dt_validade_dev, \u0027YYYY-MM-DD\u0027); END IF; IF :dt_validade_ent IS NOT NULL THEN v_dt_validade_ent := TO_DATE(:dt_validade_ent, \u0027YYYY-MM-DD\u0027); END IF; DBAMV.PKG_MV2000.ATRIBUI_EMPRESA(:cd_multi_empresa); SELECT CD_TIP_DOC INTO v_cd_tip_doc FROM DBAMV.TIP_DOC WHERE TP_DOCUMENTO = \u0027E\u0027 AND TP_ENTRADA = \u0027N\u0027 AND SN_ATIVO = \u0027S\u0027 AND ROWNUM = 1; SELECT CD_MOT_DEV INTO v_cd_mot_dev FROM DBAMV.MOT_DEV WHERE ROWNUM = 1; SELECT CD_ESTOQUE, CD_FORNECEDOR, NR_DOCUMENTO, NR_SERIE INTO v_cd_estoque, v_cd_fornecedor, v_nr_documento, v_nr_serie_orig FROM DBAMV.ENT_PRO WHERE CD_ENT_PRO = :cd_ent_pro; v_suffix := 0; LOOP v_suffix := v_suffix + 1; v_nr_serie_new := NVL(v_nr_serie_orig, \u0027\u0027) || TO_CHAR(v_suffix); SELECT COUNT(*) INTO v_cnt FROM DBAMV.ENT_PRO WHERE NR_DOCUMENTO = v_nr_documento AND NR_SERIE = v_nr_serie_new; EXIT WHEN v_cnt = 0; EXIT WHEN v_suffix \u003e= 9; END LOOP; SELECT SN_LOTE INTO v_sn_lote_dev FROM DBAMV.PRODUTO WHERE CD_PRODUTO = :cd_produto_dev; BEGIN SELECT CD_UNI_PRO INTO v_cd_uni_pro_dev FROM DBAMV.UNI_PRO WHERE CD_PRODUTO = :cd_produto_dev AND TP_RELATORIOS = \u0027R\u0027 AND ROWNUM = 1; EXCEPTION WHEN NO_DATA_FOUND THEN SELECT CD_UNI_PRO INTO v_cd_uni_pro_dev FROM DBAMV.UNI_PRO WHERE CD_PRODUTO = :cd_produto_dev AND ROWNUM = 1; END; SELECT CD_CUSTO_MEDIO_MENSAL INTO v_cd_custo_dev FROM (SELECT CD_CUSTO_MEDIO_MENSAL FROM DBAMV.CUSTO_MEDIO_MENSAL WHERE CD_PRODUTO = :cd_produto_dev ORDER BY DH_CUSTO_MEDIO DESC) WHERE ROWNUM = 1; SELECT CD_ITENT_PRO INTO v_cd_itent_pro FROM DBAMV.ITENT_PRO WHERE CD_ENT_PRO = :cd_ent_pro AND CD_PRODUTO = :cd_produto_dev AND CD_UNI_PRO = v_cd_uni_pro_dev AND ROWNUM = 1; SELECT SN_LOTE, SN_CONTROLE_VALIDADE INTO v_sn_lote_ent, v_sn_val_ent FROM DBAMV.PRODUTO WHERE CD_PRODUTO = :cd_produto_ent; BEGIN SELECT CD_UNI_PRO INTO v_cd_uni_pro_ent FROM DBAMV.UNI_PRO WHERE CD_PRODUTO = :cd_produto_ent AND TP_RELATORIOS = \u0027R\u0027 AND ROWNUM = 1; EXCEPTION WHEN NO_DATA_FOUND THEN SELECT CD_UNI_PRO INTO v_cd_uni_pro_ent FROM DBAMV.UNI_PRO WHERE CD_PRODUTO = :cd_produto_ent AND ROWNUM = 1; END; SELECT CD_CUSTO_MEDIO_MENSAL INTO v_cd_custo_ent FROM (SELECT CD_CUSTO_MEDIO_MENSAL FROM DBAMV.CUSTO_MEDIO_MENSAL WHERE CD_PRODUTO = :cd_produto_ent ORDER BY DH_CUSTO_MEDIO DESC) WHERE ROWNUM = 1; BEGIN SELECT VL_CUSTO_MEDIO INTO v_vl_unitario FROM (SELECT VL_CUSTO_MEDIO FROM DBAMV.CUSTO_MEDIO_MENSAL WHERE CD_PRODUTO = :cd_produto_ent ORDER BY DH_CUSTO_MEDIO DESC) WHERE ROWNUM = 1; IF v_vl_unitario IS NULL OR v_vl_unitario = 0 THEN v_vl_unitario := 1; END IF; EXCEPTION WHEN NO_DATA_FOUND THEN v_vl_unitario := 1; END; SELECT DBAMV.SEQ_DEV_FOR.NEXTVAL INTO v_cd_devolucao FROM DUAL; INSERT INTO DBAMV.DEV_FOR (CD_DEVOLUCAO, CD_ENT_PRO, CD_MOT_DEV, DT_DEVOLUCAO, HR_DEVOLUCAO, DT_EMISSAO, TP_DEVOLUCAO, SN_CONSOLIDADA, CD_TIP_DOC, NR_DOCUMENTO, NR_SERIE) VALUES (v_cd_devolucao, :cd_ent_pro, v_cd_mot_dev, v_dt, v_dt, v_dt, \u0027N\u0027, \u0027S\u0027, v_cd_tip_doc, v_nr_documento, v_nr_serie_new); INSERT INTO DBAMV.ITDEV_FOR (CD_ITDEV_FOR, CD_PRODUTO, CD_DEVOLUCAO, CD_UNI_PRO, QT_DEVOLVIDA, CD_CUSTO_MEDIO, CD_ITENT_PRO, CD_LOTE, DT_VALIDADE, DT_GRAVACAO) VALUES (DBAMV.SEQ_ITDEV_FOR.NEXTVAL, :cd_produto_dev, v_cd_devolucao, v_cd_uni_pro_dev, :qt_devolvida, v_cd_custo_dev, v_cd_itent_pro, :cd_lote_dev, v_dt_validade_dev, SYSDATE); SELECT SUM(i.QT_DEVOLVIDA * ep.VL_UNITARIO) INTO v_vl_total_dev FROM DBAMV.ITDEV_FOR i JOIN DBAMV.ITENT_PRO ep ON ep.CD_ITENT_PRO = i.CD_ITENT_PRO WHERE i.CD_DEVOLUCAO = v_cd_devolucao; UPDATE DBAMV.DEV_FOR SET VL_TOTAL = v_vl_total_dev WHERE CD_DEVOLUCAO = v_cd_devolucao; SELECT DBAMV.SEQ_ENT_PRO.NEXTVAL INTO v_cd_ent_pro_new FROM DUAL; INSERT INTO DBAMV.ENT_PRO (CD_ENT_PRO, CD_ESTOQUE, DT_ENTRADA, HR_ENTRADA, TP_FRETE, SN_ATUALIZA_PRECO, TP_ENTREGA, TP_DOCUMENTO_ENTRADA, CD_TIP_DOC, SN_INCLUSAO_NOTA, SN_CONSOLIDADA, SN_CONSIGNADO, SN_CONTABILIZA, SN_FECHADO, SN_AUTORIZADO, SN_IMPORTADA_FNFI, CD_FORNECEDOR, NR_DOCUMENTO, NR_SERIE, VL_TOTAL, CD_USUARIO) VALUES (v_cd_ent_pro_new, v_cd_estoque, v_dt, v_dt, \u0027C\u0027, \u0027S\u0027, \u0027T\u0027, \u0027N\u0027, v_cd_tip_doc, \u0027S\u0027, \u0027N\u0027, \u0027N\u0027, \u0027S\u0027, \u0027N\u0027, \u0027S\u0027, \u0027N\u0027, v_cd_fornecedor, v_nr_documento, v_nr_serie_new, 1, \u0027SEED\u0027); SELECT DBAMV.SEQ_ITENT_PRO.NEXTVAL INTO v_cd_itent_new FROM DUAL; INSERT INTO DBAMV.ITENT_PRO (CD_ITENT_PRO, CD_ENT_PRO, CD_PRODUTO, CD_UNI_PRO, QT_ENTRADA, QT_DEVOLVIDA, VL_UNITARIO, VL_CUSTO_REAL, VL_TOTAL, CD_CUSTO_MEDIO, DT_GRAVACAO) VALUES (v_cd_itent_new, v_cd_ent_pro_new, :cd_produto_ent, v_cd_uni_pro_ent, :qt_entrada, 0, v_vl_unitario, v_vl_unitario, :qt_entrada * v_vl_unitario, v_cd_custo_ent, SYSDATE); IF v_sn_lote_ent = \u0027S\u0027 THEN DELETE FROM DBAMV.LOT_PRO WHERE CD_PRODUTO = :cd_produto_ent AND CD_LOTE = :cd_lote_ent AND NOT EXISTS (SELECT 1 FROM DBAMV.ITLOT_ENT il JOIN DBAMV.ITENT_PRO ip ON ip.CD_ITENT_PRO = il.CD_ITENT_PRO WHERE il.CD_LOTE = :cd_lote_ent AND ip.CD_PRODUTO = :cd_produto_ent); SELECT DBAMV.SEQ_T_ITLOT_ENT.NEXTVAL INTO v_cd_itlot_new FROM DUAL; INSERT INTO DBAMV.ITLOT_ENT (CD_ITLOT_ENT, CD_ITENT_PRO, QT_ENT_PRO, CD_UNI_PRO, CD_LOTE, DT_VALIDADE) VALUES (v_cd_itlot_new, v_cd_itent_new, :qt_entrada, v_cd_uni_pro_ent, :cd_lote_ent, CASE WHEN v_sn_val_ent = \u0027S\u0027 THEN v_dt_validade_ent ELSE NULL END); END IF; UPDATE DBAMV.ENT_PRO SET VL_TOTAL = (SELECT SUM(VL_TOTAL) FROM DBAMV.ITENT_PRO WHERE CD_ENT_PRO = v_cd_ent_pro_new) WHERE CD_ENT_PRO = v_cd_ent_pro_new; COMMIT; END;",
+    "parametros":  [
+                       {
+                           "nome":  "cd_multi_empresa",
+                           "tipo":  "number",
+                           "obrigatorio":  true
+                       },
+                       {
+                           "nome":  "cd_ent_pro",
+                           "tipo":  "number",
+                           "obrigatorio":  true
+                       },
+                       {
+                           "nome":  "cd_produto_dev",
+                           "tipo":  "number",
+                           "obrigatorio":  true
+                       },
+                       {
+                           "nome":  "cd_lote_dev",
+                           "tipo":  "string",
+                           "obrigatorio":  false
+                       },
+                       {
+                           "nome":  "dt_validade_dev",
+                           "tipo":  "string",
+                           "obrigatorio":  false
+                       },
+                       {
+                           "nome":  "qt_devolvida",
+                           "tipo":  "number",
+                           "obrigatorio":  true
+                       },
+                       {
+                           "nome":  "cd_produto_ent",
+                           "tipo":  "number",
+                           "obrigatorio":  true
+                       },
+                       {
+                           "nome":  "cd_lote_ent",
+                           "tipo":  "string",
+                           "obrigatorio":  false
+                       },
+                       {
+                           "nome":  "dt_validade_ent",
+                           "tipo":  "string",
+                           "obrigatorio":  false
+                       },
+                       {
+                           "nome":  "qt_entrada",
+                           "tipo":  "number",
+                           "obrigatorio":  true
+                       },
+                       {
+                           "nome":  "dt_devolucao",
+                           "tipo":  "string",
+                           "obrigatorio":  true
+                       }
+                   ]
+}]

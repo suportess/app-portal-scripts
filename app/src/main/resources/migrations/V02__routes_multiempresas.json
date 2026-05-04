@@ -1,0 +1,25 @@
+[
+  {
+    "chave": "GET-mv-multiempresas",
+    "caminho": "/mv/api/multiempresas",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "empresas",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "multiempresas-listar",
+            "retornarResultado": true,
+            "parametros": []
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "chave": "saldo-lote-produto",
+    "descricao": "Consulta saldo em lote de um produto em um estoque, retornando quantidade atual e unidade de medida",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT SUM(QT_ESTOQUE_ATUAL) / DBAMV.VERIF_VL_FATOR_PROD(LOT_PRO.CD_PRODUTO) AS QT_ESTOQUE_ATUAL, DBAMV.VERIF_DS_UNID_PROD(LOT_PRO.CD_PRODUTO,'R') AS DS_UNIDADE FROM DBAMV.LOT_PRO WHERE LOT_PRO.CD_PRODUTO = :cd_produto AND LOT_PRO.CD_ESTOQUE = :cd_estoque GROUP BY LOT_PRO.CD_PRODUTO",
+    "parametros": [
+      { "nome": "cd_produto", "tipo": "number", "obrigatorio": true },
+      { "nome": "cd_estoque", "tipo": "number", "obrigatorio": true }
+    ]
+  }
+]

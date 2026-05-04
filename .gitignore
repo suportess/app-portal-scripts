@@ -1,0 +1,13 @@
+# Configurações locais — nunca commitar
+.env
+
+# Artefatos de build Maven
+app/target/
+
+# Histórico local de migrations
+app/portal_scripts_history.json
+app/portal_scripts_history.json~
+app/*.log
+
+# IDE
+app/.idea/

@@ -1,0 +1,82 @@
+[{
+    "chave":  "POST-mv-devolver-produto-consignado",
+    "caminho":  "/mv/api/estoques/{cd_estoque}/devolucoes",
+    "metodo":  "POST",
+    "resposta":  {
+                     "status":  201
+                 },
+    "servico":  {
+                    "threadUnica":  true,
+                    "resultadoUnico":  true,
+                    "passos":  [
+                                   {
+                                       "alias":  "devolucao",
+                                       "abortarSemDados":  false,
+                                       "comando":  {
+                                                       "tipo":  "ANONYMOUS",
+                                                       "database":  "oracle-prod",
+                                                       "nome":  "devolver-produto-consignado",
+                                                       "retornarResultado":  true,
+                                                       "parametros":  [
+                                                                          {
+                                                                              "nome":  "cd_multi_empresa",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "cd_ent_pro",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "cd_produto_dev",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "cd_lote_dev",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "dt_validade_dev",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "qt_devolvida",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "cd_produto_ent",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "cd_lote_ent",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "dt_validade_ent",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "qt_entrada",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          },
+                                                                          {
+                                                                              "nome":  "dt_devolucao",
+                                                                              "tipo":  "body",
+                                                                              "extrair":  false
+                                                                          }
+                                                                      ]
+                                                   }
+                                   }
+                               ]
+                }
+}
+]

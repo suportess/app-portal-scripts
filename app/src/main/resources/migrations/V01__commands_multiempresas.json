@@ -1,0 +1,9 @@
+[
+  {
+    "chave": "multiempresas-listar",
+    "descricao": "Lista todas as empresas cadastradas no MV",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT CD_MULTI_EMPRESA, DS_MULTI_EMPRESA FROM DBAMV.MULTI_EMPRESAS ORDER BY DS_MULTI_EMPRESA"
+  }
+]
