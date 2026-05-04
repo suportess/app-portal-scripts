@@ -1,0 +1,29 @@
+[
+  {
+    "chave": "GET-mv-produtos-consignados-busca",
+    "caminho": "/mv/api/multiempresas/{cd_multi_empresa}/estoques/{cd_estoque}/produtos/busca",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "produtos",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "produtos-consignados-busca",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_multi_empresa", "tipo": "path",  "extrair": false },
+              { "nome": "cd_estoque",       "tipo": "path",  "extrair": false },
+              { "nome": "busca",            "tipo": "query", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
