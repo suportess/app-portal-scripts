@@ -1,0 +1,12 @@
+[
+  {
+    "chave": "listar-classe",
+    "descricao": "Listar classes de produto por espécie (DBAMV.CLASSE)",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT CD_ESPECIE, CD_CLASSE, DS_CLASSE FROM DBAMV.CLASSE WHERE CD_ESPECIE = :cd_especie ORDER BY DS_CLASSE",
+    "parametros": [
+      { "nome": "cd_especie", "tipo": "number", "obrigatorio": true }
+    ]
+  }
+]

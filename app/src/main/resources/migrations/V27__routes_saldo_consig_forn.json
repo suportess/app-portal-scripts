@@ -1,0 +1,28 @@
+[
+  {
+    "chave": "GET-mv-saldo-consig-forn",
+    "caminho": "/mv/api/estoques/{cd_estoque}/produtos/{cd_produto}/saldo-consig-forn",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "saldo",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "saldo-consig-forn",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_estoque", "tipo": "path", "extrair": false },
+              { "nome": "cd_produto", "tipo": "path", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

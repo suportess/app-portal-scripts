@@ -1,0 +1,15 @@
+[
+  {
+    "chave": "saldo-produtos-consignados",
+    "descricao": "Lista produtos consignados de um estoque com saldo positivo (QT_ESTOQUE_ATUAL > 0) e unidade de medida. Filtro opcional por nome (LIKE), sem paginação",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT PRODUTO.CD_PRODUTO, PRODUTO.DS_PRODUTO, NVL(EST_PRO.QT_ESTOQUE_ATUAL, 0) QT_ESTOQUE_ATUAL, (SELECT DS_UNIDADE FROM DBAMV.UNI_PRO WHERE CD_PRODUTO = PRODUTO.CD_PRODUTO AND ROWNUM = 1) DS_UNI_PRO FROM DBAMV.PRODUTO, DBAMV.EST_PRO, DBAMV.ESTOQUE WHERE PRODUTO.SN_CONSIGNADO = 'S' AND ESTOQUE.CD_MULTI_EMPRESA = :cd_multi_empresa AND ESTOQUE.CD_ESTOQUE = :cd_estoque AND ESTOQUE.CD_ESTOQUE = EST_PRO.CD_ESTOQUE AND PRODUTO.CD_PRODUTO = EST_PRO.CD_PRODUTO AND NVL(EST_PRO.QT_ESTOQUE_ATUAL, 0) > 0 AND UPPER(PRODUTO.DS_PRODUTO) LIKE UPPER('%' || NVL(:busca, '') || '%')",
+    "ordenacao": { "nomeColuna": "PRODUTO.DS_PRODUTO", "decrescente": false },
+    "parametros": [
+      { "nome": "cd_multi_empresa", "tipo": "number", "obrigatorio": true  },
+      { "nome": "cd_estoque",       "tipo": "number", "obrigatorio": true  },
+      { "nome": "busca",            "tipo": "string", "obrigatorio": false }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "chave": "GET-mv-especie-listar",
+    "caminho": "/mv/api/especies",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "especies",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "listar-especie",
+            "retornarResultado": true,
+            "parametros": []
+          }
+        }
+      ]
+    }
+  }
+]
+

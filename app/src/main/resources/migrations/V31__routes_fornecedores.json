@@ -1,0 +1,25 @@
+[
+  {
+    "chave": "GET-mv-fornecedores",
+    "caminho": "/mv/api/fornecedores",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "fornecedores",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "fornecedores-listar",
+            "retornarResultado": true,
+            "parametros": []
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "chave": "fornecedores-listar",
+    "descricao": "Lista todos os fornecedores cadastrados no sistema MV, sem paginação",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT CD_FORNECEDOR, NM_FORNECEDOR FROM DBAMV.FORNECEDOR",
+    "ordenacao": { "nomeColuna": "NM_FORNECEDOR", "decrescente": false },
+    "parametros": []
+  }
+]

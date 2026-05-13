@@ -1,0 +1,30 @@
+[
+  {
+    "chave": "PUT-mv-api-produtos-classificacao",
+    "caminho": "/mv/api/produtos/:cd_produto/classificacao",
+    "metodo": "PUT",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "resultado",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "ANONYMOUS",
+            "database": "oracle-prod",
+            "nome": "vincular-produto-classificacao",
+            "retornarResultado": false,
+            "parametros": [
+              { "nome": "cd_produto",  "tipo": "path",  "extrair": false },
+              { "nome": "cd_especie",  "tipo": "body",  "extrair": false },
+              { "nome": "cd_classe",   "tipo": "body",  "extrair": false },
+              { "nome": "cd_sub_cla",  "tipo": "body",  "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

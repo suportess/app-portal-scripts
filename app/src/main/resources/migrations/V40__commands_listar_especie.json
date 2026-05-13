@@ -1,0 +1,10 @@
+[
+  {
+    "chave": "listar-especie",
+    "descricao": "Lista espécies de produtos do DBAMV (ESPECIE), ordenadas por descrição.",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT CD_ESPECIE, DS_ESPECIE FROM DBAMV.ESPECIE ORDER BY DS_ESPECIE",
+    "parametros": []
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "chave": "listar-empresa-produto",
+    "descricao": "Lista todas as empresas (EMPRESA_PRODUTO) vinculadas a um produto, com saldos e flags.",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT EP.CD_PRODUTO, EP.CD_MULTI_EMPRESA, EP.QT_ESTOQUE_ATUAL, EP.QT_ESTOQUE_MINIMO, EP.QT_ESTOQUE_MAXIMO, EP.SN_ATIVO, EP.SN_PADRONIZADO, EP.SN_LOTE, EP.SN_CONTROLE_VALIDADE, EP.VL_CUSTO_MEDIO, EP.VL_PRECO_DE_VENDA FROM DBAMV.EMPRESA_PRODUTO EP WHERE EP.CD_PRODUTO = :cd_produto",
+    "ordenacao": { "nomeColuna": "EP.CD_MULTI_EMPRESA", "decrescente": false },
+    "parametros": [
+      { "nome": "cd_produto", "tipo": "number", "obrigatorio": true }
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "chave": "GET-mv-api-sub-classes",
+    "caminho": "/mv/api/sub-classes",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "subClasses",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "listar-sub-clas",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_especie", "tipo": "query", "extrair": false },
+              { "nome": "cd_classe",  "tipo": "query", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

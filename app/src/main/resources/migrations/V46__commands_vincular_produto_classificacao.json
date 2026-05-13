@@ -1,0 +1,15 @@
+[
+  {
+    "chave": "vincular-produto-classificacao",
+    "descricao": "Atualiza a classificação (espécie/classe/subclasse) de um produto no DBAMV.PRODUTO",
+    "tipo": "ANONYMOUS",
+    "tipoBanco": "oracle",
+    "sql": "BEGIN UPDATE DBAMV.PRODUTO SET CD_ESPECIE = :cd_especie, CD_CLASSE = :cd_classe, CD_SUB_CLA = :cd_sub_cla WHERE CD_PRODUTO = :cd_produto; COMMIT; END;",
+    "parametros": [
+      { "nome": "cd_produto",  "tipo": "number", "obrigatorio": true },
+      { "nome": "cd_especie",  "tipo": "number", "obrigatorio": true },
+      { "nome": "cd_classe",   "tipo": "number", "obrigatorio": true },
+      { "nome": "cd_sub_cla",  "tipo": "number", "obrigatorio": true }
+    ]
+  }
+]

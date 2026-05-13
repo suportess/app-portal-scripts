@@ -1,0 +1,28 @@
+[
+  {
+    "chave": "GET-mv-estoques-consignados-tudo",
+    "caminho": "/mv/api/multiempresas/{cd_multi_empresa}/estoques/todos",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "estoques",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "estoques-consignados-tudo",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_multi_empresa", "tipo": "path",  "extrair": false },
+              { "nome": "busca",            "tipo": "query", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

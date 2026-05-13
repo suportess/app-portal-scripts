@@ -1,0 +1,27 @@
+[
+  {
+    "chave": "GET-mv-produto-empresas",
+    "caminho": "/mv/api/produtos/{cd_produto}/empresas",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "empresas",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "listar-empresa-produto",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_produto", "tipo": "path", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

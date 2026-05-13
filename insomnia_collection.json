@@ -201,6 +201,46 @@
                                               "value":  "{{ _.api_key }}"
                                           }
                                       ]
+                      },
+                      {
+                          "_id":  "req_get_estoques_consignados_tudo",
+                          "_type":  "request",
+                          "parentId":  "fld_mv",
+                          "name":  "Todos Estoques com Consignados (sem filtro de saldo)",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques/todos",
+                          "headers":  [
+                                          {
+                                              "name":  "X-API-KEY",
+                                              "value":  "{{ _.api_key }}"
+                                          }
+                                      ],
+                          "parameters":  [
+                                             {
+                                                 "name":  "busca",
+                                                 "value":  ""
+                                             }
+                                         ]
+                      },
+                      {
+                          "_id":  "req_get_produtos_consignados_tudo",
+                          "_type":  "request",
+                          "parentId":  "fld_mv",
+                          "name":  "Todos Produtos Consignados por Estoque (sem filtro de saldo)",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques/45/produtos/todos",
+                          "headers":  [
+                                          {
+                                              "name":  "X-API-KEY",
+                                              "value":  "{{ _.api_key }}"
+                                          }
+                                      ],
+                          "parameters":  [
+                                             {
+                                                 "name":  "busca",
+                                                 "value":  ""
+                                             }
+                                         ]
                       }
                   ]
 }

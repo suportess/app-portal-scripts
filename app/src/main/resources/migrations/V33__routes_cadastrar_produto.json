@@ -1,0 +1,45 @@
+[
+  {
+    "chave": "POST-mv-produtos",
+    "caminho": "/mv/api/produtos",
+    "metodo": "POST",
+    "resposta": { "status": 201 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "resultado",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "ANONYMOUS",
+            "database": "oracle-prod",
+            "nome": "cadastrar-produto",
+            "retornarResultado": false,
+            "parametros": [
+              { "nome": "ds_produto",              "tipo": "body", "extrair": false },
+              { "nome": "ds_comercial",            "tipo": "body", "extrair": false },
+              { "nome": "ds_especificacao",        "tipo": "body", "extrair": false },
+              { "nome": "sn_lote",                 "tipo": "body", "extrair": false },
+              { "nome": "sn_validade",             "tipo": "body", "extrair": false },
+              { "nome": "sn_medicamento",          "tipo": "body", "extrair": false },
+              { "nome": "sn_consignado",           "tipo": "body", "extrair": false },
+              { "nome": "tp_sexo",                 "tipo": "body", "extrair": false },
+              { "nome": "cd_especie",              "tipo": "body", "extrair": false },
+              { "nome": "cd_classe",               "tipo": "body", "extrair": false },
+              { "nome": "cd_sub_cla",              "tipo": "body", "extrair": false },
+              { "nome": "ds_sub_cla",              "tipo": "body", "extrair": false },
+              { "nome": "unidades_json",           "tipo": "body", "extrair": false },
+              { "nome": "empresas_json",           "tipo": "body", "extrair": false },
+              { "nome": "cd_tip_ativ",             "tipo": "body", "extrair": false },
+              { "nome": "cd_pro_fat",              "tipo": "body", "extrair": false },
+              { "nome": "cd_pro_fat_sus",          "tipo": "body", "extrair": false },
+              { "nome": "cd_procedimento_sus",     "tipo": "body", "extrair": false },
+              { "nome": "cd_fornecedor_principal", "tipo": "body", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "chave": "listar-uni-pro-produto",
+    "descricao": "Lista todas as unidades de medida (UNI_PRO) de um produto, ordenadas por tipo (Referencial primeiro) e fator.",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT CD_UNI_PRO, CD_PRODUTO, CD_UNIDADE, DS_UNIDADE, VL_FATOR, TP_RELATORIOS, SN_ATIVO, SN_PRESCRICAO FROM DBAMV.UNI_PRO WHERE CD_PRODUTO = :cd_produto",
+    "ordenacao": { "nomeColuna": "TP_RELATORIOS", "decrescente": true },
+    "parametros": [
+      { "nome": "cd_produto", "tipo": "number", "obrigatorio": true }
+    ]
+  }
+]

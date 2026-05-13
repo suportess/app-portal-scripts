@@ -1,0 +1,10 @@
+[
+  {
+    "chave": "listar-unidade",
+    "descricao": "Lista todas as unidades de medida (DBAMV.UNIDADE), ordenadas por descrição.",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT CD_UNIDADE, DS_UNIDADE, VL_FATOR FROM DBAMV.UNIDADE ORDER BY DS_UNIDADE",
+    "parametros": []
+  }
+]

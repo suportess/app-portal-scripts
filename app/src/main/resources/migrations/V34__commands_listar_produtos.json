@@ -1,0 +1,19 @@
+[
+  {
+    "chave": "listar-produtos-mv",
+    "descricao": "Lista produtos do DBAMV com busca opcional por nome, paginado. Retorna dados principais do PRODUTO + classificação (SUB_CLAS) + unidade referencial (UNI_PRO).",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT P.CD_PRODUTO, P.DS_PRODUTO, P.DS_COMERCIAL, P.SN_LOTE, P.SN_CONTROLE_VALIDADE AS SN_VALIDADE, P.SN_CONSIGNADO, P.SN_MEDICAMENTO, P.TP_SEXO, P.TP_ATIVO, SC.DS_SUB_CLA, P.CD_ESPECIE, P.CD_CLASSE, P.CD_SUB_CLA, (SELECT UP.DS_UNIDADE FROM DBAMV.UNI_PRO UP WHERE UP.CD_PRODUTO = P.CD_PRODUTO AND UP.TP_RELATORIOS = 'R' AND ROWNUM = 1) AS DS_UNIDADE_REF FROM DBAMV.PRODUTO P LEFT JOIN DBAMV.SUB_CLAS SC ON SC.CD_ESPECIE = P.CD_ESPECIE AND SC.CD_CLASSE = P.CD_CLASSE AND SC.CD_SUB_CLA = P.CD_SUB_CLA WHERE UPPER(P.DS_PRODUTO) LIKE UPPER('%' || NVL(:busca, '') || '%') AND P.TP_ATIVO = 'S'",
+    "ordenacao": { "nomeColuna": "P.DS_PRODUTO", "decrescente": false },
+    "parametros": [
+      { "nome": "busca", "tipo": "string", "obrigatorio": false }
+    ],
+    "paginacao": {
+      "paramPagina": "page",
+      "paramTamanhoPagina": "pageSize",
+      "tamanhoPaginaPadrao": 50,
+      "tamanhoPaginaMaximo": 200
+    }
+  }
+]

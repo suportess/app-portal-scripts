@@ -1,0 +1,25 @@
+[
+  {
+    "chave": "GET-mv-api-unidades",
+    "caminho": "/mv/api/unidades",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "unidades",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "listar-unidade",
+            "retornarResultado": true,
+            "parametros": []
+          }
+        }
+      ]
+    }
+  }
+]

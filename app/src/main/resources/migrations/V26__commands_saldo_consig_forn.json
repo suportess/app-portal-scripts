@@ -1,0 +1,13 @@
+[
+  {
+    "chave": "saldo-consig-forn",
+    "descricao": "Lista saldo consignado por fornecedor de um produto em um estoque, com saldo disponivel da ent_pro e flag se o produto entrou por aquele estoque",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT e.cd_multi_empresa, ecf.cd_estoque, e.ds_estoque, ecf.cd_produto, p.ds_produto, ecf.cd_fornecedor, f.nm_fornecedor, NVL(ecf.qt_estoque_consignado, 0) + NVL(ecf.qt_estoque_transferencia, 0) AS qt_saldo_consig, (SELECT SUM((i2.qt_entrada - NVL(i2.qt_devolvida, 0)) * u.vl_fator) FROM dbamv.itent_pro i2 INNER JOIN dbamv.ent_pro e2 ON e2.cd_ent_pro = i2.cd_ent_pro INNER JOIN dbamv.uni_pro u ON u.cd_uni_pro = i2.cd_uni_pro WHERE i2.cd_produto = ecf.cd_produto AND e2.cd_fornecedor = ecf.cd_fornecedor AND e2.cd_estoque = ecf.cd_estoque) AS qt_disponivel_entpro, CASE WHEN EXISTS (SELECT 1 FROM dbamv.ent_pro ep INNER JOIN dbamv.itent_pro iep ON iep.cd_ent_pro = ep.cd_ent_pro WHERE ep.cd_estoque = ecf.cd_estoque AND ep.cd_fornecedor = ecf.cd_fornecedor AND iep.cd_produto = ecf.cd_produto AND NVL(iep.qt_devolvida, 0) < NVL(iep.qt_entrada, 0)) THEN 'S' ELSE 'N' END AS sn_entrou_por_estoque FROM dbamv.est_consig_forn ecf INNER JOIN dbamv.fornecedor f ON f.cd_fornecedor = ecf.cd_fornecedor INNER JOIN dbamv.estoque e ON e.cd_estoque = ecf.cd_estoque LEFT JOIN dbamv.produto p ON p.cd_produto = ecf.cd_produto WHERE NVL(ecf.qt_estoque_consignado, 0) + NVL(ecf.qt_estoque_transferencia, 0) > 0 AND ecf.cd_produto = :cd_produto AND ecf.cd_estoque = :cd_estoque ORDER BY f.nm_fornecedor, e.ds_estoque, p.ds_produto",
+    "parametros": [
+      { "nome": "cd_estoque", "tipo": "number", "obrigatorio": true },
+      { "nome": "cd_produto", "tipo": "number", "obrigatorio": true }
+    ]
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "chave": "GET-mv-api-classes",
+    "caminho": "/mv/api/classes",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "classes",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "listar-classe",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_especie", "tipo": "query", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

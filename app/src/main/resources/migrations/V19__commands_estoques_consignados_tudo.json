@@ -1,0 +1,14 @@
+[
+  {
+    "chave": "estoques-consignados-tudo",
+    "descricao": "Lista estoques de uma empresa MV que possuem produtos consignados com saldo positivo (QT_ESTOQUE_ATUAL > 0). Filtro opcional por nome (LIKE), sem paginação",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT DISTINCT ESTOQUE.CD_ESTOQUE, ESTOQUE.DS_ESTOQUE FROM DBAMV.PRODUTO, DBAMV.EST_PRO, DBAMV.ESTOQUE WHERE PRODUTO.SN_CONSIGNADO = 'S' AND ESTOQUE.CD_MULTI_EMPRESA = :cd_multi_empresa AND ESTOQUE.CD_ESTOQUE = EST_PRO.CD_ESTOQUE AND PRODUTO.CD_PRODUTO = EST_PRO.CD_PRODUTO AND NVL(EST_PRO.QT_ESTOQUE_ATUAL, 0) > 0 AND UPPER(ESTOQUE.DS_ESTOQUE) LIKE UPPER('%' || NVL(:busca, '') || '%')",
+    "ordenacao": { "nomeColuna": "ESTOQUE.DS_ESTOQUE", "decrescente": false },
+    "parametros": [
+      { "nome": "cd_multi_empresa", "tipo": "number", "obrigatorio": true  },
+      { "nome": "busca",            "tipo": "string", "obrigatorio": false }
+    ]
+  }
+]

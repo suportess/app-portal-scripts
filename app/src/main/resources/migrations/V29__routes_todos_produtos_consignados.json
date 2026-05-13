@@ -1,0 +1,25 @@
+[
+  {
+    "chave": "GET-mv-todos-produtos-consignados",
+    "caminho": "/mv/api/produtos-consignados",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "produtos",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "todos-produtos-consignados-listar",
+            "retornarResultado": true,
+            "parametros": []
+          }
+        }
+      ]
+    }
+  }
+]

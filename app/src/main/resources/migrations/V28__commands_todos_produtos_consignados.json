@@ -1,0 +1,11 @@
+[
+  {
+    "chave": "todos-produtos-consignados-listar",
+    "descricao": "Lista todos os produtos consignados cadastrados no sistema MV (sem filtro de estoque ou saldo)",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT P.CD_PRODUTO, P.DS_PRODUTO FROM DBAMV.PRODUTO P, DBAMV.EMPRESA_PRODUTO EP WHERE P.SN_CONSIGNADO = 'S' AND P.CD_PRODUTO = EP.CD_PRODUTO AND NVL(P.SN_MOVIMENTACAO,'S') = 'S'",
+    "ordenacao": { "nomeColuna": "P.DS_PRODUTO", "decrescente": false },
+    "parametros": []
+  }
+]

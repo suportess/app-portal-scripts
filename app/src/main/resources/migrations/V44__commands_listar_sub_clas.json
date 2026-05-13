@@ -1,0 +1,13 @@
+[
+  {
+    "chave": "listar-sub-clas",
+    "descricao": "Listar subclasses de produto por espécie e classe (DBAMV.SUB_CLAS)",
+    "tipo": "QUERY",
+    "tipoBanco": "oracle",
+    "sql": "SELECT CD_ESPECIE, CD_CLASSE, CD_SUB_CLA, DS_SUB_CLA FROM DBAMV.SUB_CLAS WHERE CD_ESPECIE = :cd_especie AND CD_CLASSE = :cd_classe AND SN_ATIVO = 'S' ORDER BY DS_SUB_CLA",
+    "parametros": [
+      { "nome": "cd_especie", "tipo": "number", "obrigatorio": true },
+      { "nome": "cd_classe", "tipo": "number", "obrigatorio": true }
+    ]
+  }
+]

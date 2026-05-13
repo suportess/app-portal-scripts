@@ -22,7 +22,7 @@
 services:
 
   portal-scripts:
-    image: ${DOCKER_USERNAME:-suportess}/app-suportes-portal-scripts:${IMAGE_TAG:-latest}
+    image: jessebezerra/app-suportes-portal-scripts:latest
     container_name: portal-scripts
     restart: "no"
     env_file: .env

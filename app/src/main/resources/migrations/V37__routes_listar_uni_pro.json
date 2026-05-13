@@ -1,0 +1,27 @@
+[
+  {
+    "chave": "GET-mv-produto-unidades",
+    "caminho": "/mv/api/produtos/{cd_produto}/unidades",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "unidades",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "listar-uni-pro-produto",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_produto", "tipo": "path", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

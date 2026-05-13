@@ -1,0 +1,29 @@
+[
+  {
+    "chave": "GET-mv-produtos-listar",
+    "caminho": "/mv/api/produtos",
+    "metodo": "GET",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": false,
+      "passos": [
+        {
+          "alias": "produtos",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "QUERY",
+            "database": "oracle-prod",
+            "nome": "listar-produtos-mv",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "busca",    "tipo": "query", "extrair": false },
+              { "nome": "page",     "tipo": "query", "extrair": false },
+              { "nome": "pageSize", "tipo": "query", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
