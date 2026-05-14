@@ -1,0 +1,14 @@
+[
+  {
+    "chave": "cadastrar-pro-fat",
+    "descricao": "Cadastra procedimento de faturamento em DBAMV.PRO_FAT, gerando cd_pro_fat automaticamente (max+1), retorna o codigo gerado.",
+    "tipo": "ANONYMOUS",
+    "tipoBanco": "oracle",
+    "sql": "DECLARE v_cd_pro_fat VARCHAR2(14); BEGIN DBAMV.PKG_MV2000.ATRIBUI_EMPRESA(1); SELECT LPAD(TO_CHAR(NVL(MAX(CASE WHEN REGEXP_LIKE(TRIM(CD_PRO_FAT), '^[0-9]+$') THEN TO_NUMBER(TRIM(CD_PRO_FAT)) ELSE NULL END), 0) + 1), 8, '0') INTO v_cd_pro_fat FROM DBAMV.PRO_FAT; INSERT INTO DBAMV.PRO_FAT (CD_PRO_FAT, DS_PRO_FAT, DS_UNIDADE, TP_SEXO, CD_GRU_PRO, SN_PACOTE, SN_ATIVO, SN_URGENCIA, SN_PODE_PERM_MAIOR, SN_PODE_SD, SN_FIDEPS, SN_CD_SUS_AUXILIAR, SN_PERTENCE_PACOTE_SUS, SN_CONTRASTE, SN_PODE_SER_AUTORIZADO, SN_ATO_ANESTESICO, SN_BUSCA_ATIVA_PAC_OBITO, SN_OBRIGA_VDRL, SN_PERMITE_ALTA_DA_UTI, SN_GERA_MATRICULA_SAME, SN_LANCA_PRO_FAT_ATEND, SN_CALCULA_VALOR, SN_PARTO, SN_DIARIA_UTI_RN, SN_OPME) VALUES (v_cd_pro_fat, :ds_pro_fat, 'UN', 'A', 8, 'N', 'S', 'N', 'N', 'S', 'N', 'N', 'N', 'N', 'S', 'N', 'N', 'N', 'N', 'N', 'N', 'S', 'N', 'N', :sn_opme); COMMIT; :cd_pro_fat_out := v_cd_pro_fat; END;",
+    "parametros": [
+      { "nome": "ds_pro_fat",     "tipo": "string", "obrigatorio": true  },
+      { "nome": "sn_opme",        "tipo": "string", "obrigatorio": false },
+      { "nome": "cd_pro_fat_out", "tipo": "out",    "obrigatorio": false }
+    ]
+  }
+]

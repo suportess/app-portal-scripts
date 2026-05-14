@@ -1,0 +1,30 @@
+[
+  {
+    "chave": "POST-mv-pro-fat",
+    "caminho": "/mv/api/pro-fat",
+    "metodo": "POST",
+    "resposta": {
+      "status": 201
+    },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": true,
+      "passos": [
+        {
+          "alias": "resultado",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "ANONYMOUS",
+            "database": "oracle-prod",
+            "nome": "cadastrar-pro-fat",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "ds_pro_fat", "tipo": "body", "extrair": false },
+              { "nome": "sn_opme",    "tipo": "body", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

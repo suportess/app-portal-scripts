@@ -1,0 +1,33 @@
+[
+  {
+    "chave": "cadastrar-produto",
+    "descricao": "Cadastra produto no MV (v8): UNI_PRO simplificado - uma unica unidade tipo R buscada de DBAMV.UNIDADE.",
+    "tipo": "ANONYMOUS",
+    "tipoBanco": "oracle",
+    "sql": "DECLARE v_cnt NUMBER; v_cd_produto NUMBER; v_cd_itunidade NUMBER; v_nm_unidade VARCHAR2(60); BEGIN DBAMV.PKG_MV2000.ATRIBUI_EMPRESA(1); SELECT COUNT(*) INTO v_cnt FROM DBAMV.SUB_CLAS WHERE CD_CLASSE = :cd_classe AND CD_ESPECIE = :cd_especie AND CD_SUB_CLA = :cd_sub_cla; IF v_cnt = 0 THEN INSERT INTO DBAMV.SUB_CLAS (CD_CLASSE, CD_ESPECIE, CD_SUB_CLA, DS_SUB_CLA, SN_SAIDA_PACIENTE, SN_SAIDA_CC, SN_CUSTO_DIRETO, SN_PROD_PERMANENTE, SN_TRANSFERE, SN_ATIVO, SN_SOL_PRESCRICAO) VALUES (:cd_classe, :cd_especie, :cd_sub_cla, :ds_sub_cla, 'S', 'S', 'N', 'N', 'S', 'S', 'N'); END IF; v_cd_produto := DBAMV.SEQ_PRODUTO.NEXTVAL; INSERT INTO DBAMV.PRODUTO (CD_PRODUTO, CD_SUB_CLA, CD_CLASSE, CD_ESPECIE, DS_PRODUTO, DS_PRODUTO_RESUMIDO, DS_COMERCIAL, DS_ESPECIFICACAO, DT_CADASTRO, TP_ATIVO, TP_STATUS_UNIFICADO, TP_SEXO, SN_LOTE, SN_CONTROLE_VALIDADE, SN_MEDICAMENTO, SN_CONSIGNADO, SN_MOVIMENTACAO, SN_PADRONIZADO, SN_BLOQUEIO_DE_COMPRA, SN_PSCOTROPICO, SN_ACONDICIONADO, SN_IMPRIME_ETIQUETA, SN_KIT, SN_MESTRE, SN_INVASIVO, SN_OPME, SN_BLOQUEIO_SOL_ORD_COMPRA, SN_MARCA_OBRIGATORIA, SN_CONTROLA_SERIE, TP_CLASSIFICACAO_TRIBUTARIA, TP_CALCULO_MEDIA_PONDERADA, CD_TIP_ATIV, CD_PRO_FAT, CD_PRO_FAT_SUS, CD_PROCEDIMENTO_SUS, CD_FORNECEDOR_PRINCIPAL, CD_SICAN) VALUES (v_cd_produto, :cd_sub_cla, :cd_classe, :cd_especie, :ds_produto, SUBSTR(:ds_produto, 1, 40), :ds_comercial, :ds_especificacao, SYSDATE, 'S', 'A', :tp_sexo, :sn_lote, :sn_validade, :sn_medicamento, :sn_consignado, 'S', 'N', 'N', 'N', 'N', 'S', 'N', 'N', 'N', :sn_opme, 'N', 'N', 'N', 'T', 'M', :cd_tip_ativ, :cd_pro_fat, :cd_pro_fat_sus, :cd_procedimento_sus, :cd_fornecedor_principal, :cd_sican); SELECT CD_ITUNIDADE, NM_ITUNIDADE INTO v_cd_itunidade, v_nm_unidade FROM DBAMV.ITUNIDADE WHERE CD_UNIDADE = :cd_unidade AND ROWNUM = 1; INSERT INTO DBAMV.UNI_PRO (CD_UNI_PRO, CD_PRODUTO, CD_UNIDADE, DS_UNIDADE, VL_FATOR, TP_RELATORIOS, SN_ATIVO, SN_PRESCRICAO, CD_ITUNIDADE) VALUES (DBAMV.SEQ_UNI_PRO.NEXTVAL, v_cd_produto, :cd_unidade, v_nm_unidade, 1, 'R', 'S', 'S', v_cd_itunidade); FOR e IN (SELECT empresa FROM JSON_TABLE(:empresas_json, '$[*]' COLUMNS (empresa NUMBER PATH '$'))) LOOP INSERT INTO DBAMV.EMPRESA_PRODUTO (CD_PRODUTO, CD_MULTI_EMPRESA, QT_ESTOQUE_ATUAL, QT_ESTOQUE_MINIMO, QT_ESTOQUE_MAXIMO, QT_PONTO_DE_PEDIDO, QT_CONSUMO_MES, VL_CUSTO_MEDIO, VL_MARGEM_LUCRO, VL_PRECO_DE_VENDA, SN_ATIVO, SN_PADRONIZADO, SN_LOTE, SN_CONTROLE_VALIDADE, SN_BLOQUEIO_DE_COMPRA, SN_MOVIMENTACAO) VALUES (v_cd_produto, e.empresa, 0, 0, 0, 0, 0, 0, 0, 0, 'S', 'N', :sn_lote, :sn_validade, 'N', 'S'); END LOOP; COMMIT; :cd_produto_out := v_cd_produto; END;",
+    "parametros": [
+      { "nome": "ds_produto",              "tipo": "string",  "obrigatorio": true  },
+      { "nome": "ds_comercial",            "tipo": "string",  "obrigatorio": false },
+      { "nome": "ds_especificacao",        "tipo": "string",  "obrigatorio": false },
+      { "nome": "sn_lote",                 "tipo": "string",  "obrigatorio": true  },
+      { "nome": "sn_validade",             "tipo": "string",  "obrigatorio": true  },
+      { "nome": "sn_medicamento",          "tipo": "string",  "obrigatorio": true  },
+      { "nome": "sn_consignado",           "tipo": "string",  "obrigatorio": true  },
+      { "nome": "sn_opme",                 "tipo": "string",  "obrigatorio": false },
+      { "nome": "tp_sexo",                 "tipo": "string",  "obrigatorio": true  },
+      { "nome": "cd_especie",              "tipo": "number",  "obrigatorio": true  },
+      { "nome": "cd_classe",               "tipo": "number",  "obrigatorio": true  },
+      { "nome": "cd_sub_cla",              "tipo": "number",  "obrigatorio": true  },
+      { "nome": "ds_sub_cla",              "tipo": "string",  "obrigatorio": true  },
+      { "nome": "cd_unidade",              "tipo": "string",  "obrigatorio": true  },
+      { "nome": "empresas_json",           "tipo": "string",  "obrigatorio": true  },
+      { "nome": "cd_tip_ativ",             "tipo": "number",  "obrigatorio": false },
+      { "nome": "cd_pro_fat",              "tipo": "string",  "obrigatorio": false },
+      { "nome": "cd_pro_fat_sus",          "tipo": "string",  "obrigatorio": false },
+      { "nome": "cd_procedimento_sus",     "tipo": "string",  "obrigatorio": false },
+      { "nome": "cd_fornecedor_principal", "tipo": "number",  "obrigatorio": false },
+      { "nome": "cd_sican",                "tipo": "string",  "obrigatorio": false },
+      { "nome": "cd_produto_out",          "tipo": "out",     "obrigatorio": false }
+    ]
+  }
+]
