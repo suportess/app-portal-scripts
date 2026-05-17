@@ -1,0 +1,32 @@
+[
+  {
+    "chave": "POST-mv-devolver-saldo-consig",
+    "caminho": "/mv/api/devolucoes/saldo-consig",
+    "metodo": "POST",
+    "resposta": { "status": 201 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": true,
+      "passos": [
+        {
+          "alias": "devolucao",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "ANONYMOUS",
+            "database": "oracle-prod",
+            "nome": "devolver-saldo-consig",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_produto",    "tipo": "body", "extrair": false },
+              { "nome": "qt_devolvida",  "tipo": "body", "extrair": false },
+              { "nome": "cd_estoque",    "tipo": "body", "extrair": false },
+              { "nome": "cd_fornecedor", "tipo": "body", "extrair": false },
+              { "nome": "cd_unidade",    "tipo": "body", "extrair": false },
+              { "nome": "cd_mot_dev",    "tipo": "body", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

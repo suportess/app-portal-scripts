@@ -1,0 +1,28 @@
+[
+  {
+    "chave": "POST-mv-entradas-transferencia",
+    "caminho": "/mv/api/entradas/transferencia",
+    "metodo": "POST",
+    "resposta": { "status": 201 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": true,
+      "passos": [
+        {
+          "alias": "transferencia",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "ANONYMOUS",
+            "database": "oracle-prod",
+            "nome": "transferencia-produto",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cabecas_json", "tipo": "body", "extrair": false },
+              { "nome": "itens_json",   "tipo": "body", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

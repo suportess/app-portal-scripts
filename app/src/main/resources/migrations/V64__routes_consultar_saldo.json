@@ -1,0 +1,30 @@
+[
+  {
+    "chave": "POST-mv-saldos-consultar-item",
+    "caminho": "/mv/api/saldos/consultar-item",
+    "metodo": "POST",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": true,
+      "passos": [
+        {
+          "alias": "resultado",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "ANONYMOUS",
+            "database": "oracle-prod",
+            "nome": "consultar-saldo",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_produto",    "tipo": "body", "extrair": false },
+              { "nome": "cd_estoque",    "tipo": "body", "extrair": false },
+              { "nome": "cd_fornecedor", "tipo": "body", "extrair": false },
+              { "nome": "cd_unidade",    "tipo": "body", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

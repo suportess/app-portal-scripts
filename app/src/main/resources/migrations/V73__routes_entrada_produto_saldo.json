@@ -1,0 +1,31 @@
+[
+  {
+    "chave": "POST-mv-entrada-produto-saldo",
+    "caminho": "/mv/api/entradas/saldo",
+    "metodo": "POST",
+    "resposta": { "status": 201 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": true,
+      "passos": [
+        {
+          "alias": "entrada",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "ANONYMOUS",
+            "database": "oracle-prod",
+            "nome": "entrada-produto-saldo",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_produto",    "tipo": "body", "extrair": false },
+              { "nome": "cd_estoque",    "tipo": "body", "extrair": false },
+              { "nome": "cd_fornecedor", "tipo": "body", "extrair": false },
+              { "nome": "cd_unidade",    "tipo": "body", "extrair": false },
+              { "nome": "qt_entrada",    "tipo": "body", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
