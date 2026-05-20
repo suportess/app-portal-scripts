@@ -1,0 +1,27 @@
+[
+  {
+    "chave": "POST-mv-vincular-sus-produto",
+    "caminho": "/mv/api/produtos/vincular-sus",
+    "metodo": "POST",
+    "resposta": { "status": 201 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": true,
+      "passos": [
+        {
+          "alias": "vincular",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "ANONYMOUS",
+            "database": "oracle-prod",
+            "nome": "vincular-sus-produto",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "vinculos_json", "tipo": "body", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "chave": "bloquear-produto",
+    "descricao": "Bloqueia ou desbloqueia um produto para movimentacao e compras. Acao BLOQUEIO: SN_MOVIMENTACAO=N, SN_BLOQUEIO_DE_COMPRA=S, SN_BLOQUEIO_SOL_ORD_COMPRA=S, SN_BLOQUEIA_MOVIMENTACAO=S em PRODUTO e EMPRESA_PRODUTO. Acao DESBLOQUEIO: inverte todos os valores. Retorna JSON com status, acao, cd_produto, rows_produto, rows_empresa.",
+    "tipo": "ANONYMOUS",
+    "tipoBanco": "oracle",
+    "sql": "DECLARE v_cp NUMBER:=:cd_produto; v_acao VARCHAR2(15):=UPPER(:acao); v_sn_mov VARCHAR2(1); v_sn_blq_compra VARCHAR2(1); v_sn_blq_sol VARCHAR2(1); v_sn_blq_movto VARCHAR2(1); v_rows_produto NUMBER; v_rows_empresa NUMBER; BEGIN DBAMV.PKG_MV2000.ATRIBUI_EMPRESA(1); IF UPPER(v_acao) = 'BLOQUEIO' THEN v_sn_mov := 'N'; v_sn_blq_compra := 'S'; v_sn_blq_sol := 'S'; v_sn_blq_movto := 'S'; ELSIF UPPER(v_acao) = 'DESBLOQUEIO' THEN v_sn_mov := 'S'; v_sn_blq_compra := 'N'; v_sn_blq_sol := 'N'; v_sn_blq_movto := 'N'; ELSE RAISE_APPLICATION_ERROR(-20001, 'Acao invalida: use BLOQUEIO ou DESBLOQUEIO (recebido: \"' || v_acao || '\")'); END IF; UPDATE DBAMV.PRODUTO SET SN_MOVIMENTACAO = v_sn_mov, SN_BLOQUEIO_DE_COMPRA = v_sn_blq_compra, SN_BLOQUEIO_SOL_ORD_COMPRA = v_sn_blq_sol, SN_BLOQUEIA_MOVIMENTACAO = v_sn_blq_movto WHERE CD_PRODUTO = v_cp; v_rows_produto := SQL%ROWCOUNT; IF v_rows_produto = 0 THEN RAISE_APPLICATION_ERROR(-20002, 'Produto ' || v_cp || ' nao encontrado'); END IF; UPDATE DBAMV.EMPRESA_PRODUTO SET SN_MOVIMENTACAO = v_sn_mov, SN_BLOQUEIO_DE_COMPRA = v_sn_blq_compra WHERE CD_PRODUTO = v_cp; v_rows_empresa := SQL%ROWCOUNT; COMMIT; :result_out:=( '{\"status\":\"ok\"' || ',\"acao\":\"' || UPPER(v_acao) || '\"' || ',\"cd_produto\":' || v_cp || ',\"rows_produto\":' || v_rows_produto || ',\"rows_empresa\":' || v_rows_empresa || '}' ); EXCEPTION WHEN OTHERS THEN ROLLBACK; :result_out:=( '{\"status\":\"erro\",\"mensagem\":\"' || REPLACE(SQLERRM, '\"', '\\\"') || '\"}' ); END;",
+    "parametros": [
+      {
+        "nome": "cd_produto",
+        "tipo": "number",
+        "obrigatorio": true
+      },
+      {
+        "nome": "acao",
+        "tipo": "string",
+        "obrigatorio": true
+      },
+      {
+        "nome": "result_out",
+        "tipo": "out",
+        "obrigatorio": false
+      }
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "chave": "POST-mv-bloquear-produto",
+    "caminho": "/mv/api/produtos/bloqueio",
+    "metodo": "POST",
+    "resposta": { "status": 200 },
+    "servico": {
+      "threadUnica": true,
+      "resultadoUnico": true,
+      "passos": [
+        {
+          "alias": "bloqueio",
+          "abortarSemDados": false,
+          "comando": {
+            "tipo": "ANONYMOUS",
+            "database": "oracle-prod",
+            "nome": "bloquear-produto",
+            "retornarResultado": true,
+            "parametros": [
+              { "nome": "cd_produto", "tipo": "body", "extrair": false },
+              { "nome": "acao",       "tipo": "body", "extrair": false }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
