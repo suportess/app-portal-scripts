@@ -1,246 +1,268 @@
 {
-    "_type":  "export",
-    "__export_format":  4,
-    "__export_date":  "2026-05-03",
-    "__export_source":  "portal-scripts",
-    "resources":  [
-                      {
-                          "_id":  "wrk_portal_dbamv",
-                          "_type":  "workspace",
-                          "name":  "Portal DBAMV",
-                          "description":  "Rotas geradas via portal-scripts â€” API sobre o banco DBAMV (Oracle MV)"
-                      },
-                      {
-                          "_id":  "env_base",
-                          "_type":  "environment",
-                          "parentId":  "wrk_portal_dbamv",
-                          "name":  "Base",
-                          "data":  {
-                                       "base_url":  "http://localhost:8088",
-                                       "api_key":  "uuuuuuuuuuu"
-                                   }
-                      },
-                      {
-                          "_id":  "fld_mv",
-                          "_type":  "request_group",
-                          "parentId":  "wrk_portal_dbamv",
-                          "name":  "MV"
-                      },
-                      {
-                          "_id":  "req_get_multiempresas",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Listar Multi Empresas",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/multiempresas",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_get_estoques_consignados",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Estoques com Consignados por Empresa",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ],
-                          "parameters":  [
-                                             {
-                                                 "name":  "page",
-                                                 "value":  "1"
-                                             },
-                                             {
-                                                 "name":  "pageSize",
-                                                 "value":  "20"
-                                             }
-                                         ]
-                      },
-                      {
-                          "_id":  "req_get_produtos_consignados",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Produtos Consignados por Empresa e Estoque",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques/1/produtos",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ],
-                          "parameters":  [
-                                             {
-                                                 "name":  "page",
-                                                 "value":  "1"
-                                             },
-                                             {
-                                                 "name":  "pageSize",
-                                                 "value":  "20"
-                                             }
-                                         ]
-                      },
-                      {
-                          "_id":  "req_get_estoques_consignados_busca",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Busca Estoques com Consignados (LIKE, sem paginação)",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques/busca",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ],
-                          "parameters":  [
-                                             {
-                                                 "name":  "busca",
-                                                 "value":  "farm"
-                                             }
-                                         ]
-                      },
-                      {
-                          "_id":  "req_get_produtos_consignados_busca",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Busca Produtos Consignados (LIKE, sem paginação)",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques/45/produtos/busca",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ],
-                          "parameters":  [
-                                             {
-                                                 "name":  "busca",
-                                                 "value":  "bal"
-                                             }
-                                         ]
-                      },
-                      {
-                          "_id":  "req_get_saldo_lote_produto",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Saldo em Lote de Produto por Estoque",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/estoques/45/produtos/5887/saldo-lote",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_get_entradas_por_produto",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Entradas por Produto e Estoque",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/estoques/45/produtos/5887/entradas",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ],
-                          "parameters":  [
-                                             {
-                                                 "name":  "page",
-                                                 "value":  "1"
-                                             },
-                                             {
-                                                 "name":  "pageSize",
-                                                 "value":  "20"
-                                             }
-                                         ]
-                      },
-                      {
-                          "_id":  "req_post_devolver_produto_consignado",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Devolver Produto Consignado",
-                          "method":  "POST",
-                          "url":  "{{ _.base_url }}/mv/api/estoques/45/devolucoes",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\"cd_multi_empresa\":1,\"cd_ent_pro\":123456,\"cd_produto_dev\":5887,\"cd_lote_dev\":null,\"dt_validade_dev\":null,\"qt_devolvida\":10,\"cd_produto_ent\":5907,\"cd_lote_ent\":null,\"dt_validade_ent\":null,\"qt_entrada\":10,\"dt_devolucao\":\"2026-05-03\"}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_get_produto_detalhe",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Detalhe do Produto (lote/validade)",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/produtos/5887",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_get_estoques_consignados_tudo",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Todos Estoques com Consignados (sem filtro de saldo)",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques/todos",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ],
-                          "parameters":  [
-                                             {
-                                                 "name":  "busca",
-                                                 "value":  ""
-                                             }
-                                         ]
-                      },
-                      {
-                          "_id":  "req_get_produtos_consignados_tudo",
-                          "_type":  "request",
-                          "parentId":  "fld_mv",
-                          "name":  "Todos Produtos Consignados por Estoque (sem filtro de saldo)",
-                          "method":  "GET",
-                          "url":  "{{ _.base_url }}/mv/api/multiempresas/1/estoques/45/produtos/todos",
-                          "headers":  [
-                                          {
-                                              "name":  "X-API-KEY",
-                                              "value":  "{{ _.api_key }}"
-                                          }
-                                      ],
-                          "parameters":  [
-                                             {
-                                                 "name":  "busca",
-                                                 "value":  ""
-                                             }
-                                         ]
-                      }
-                  ]
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-05-03",
+  "__export_source": "portal-scripts",
+  "resources": [
+    {
+      "_id": "wrk_portal_dbamv",
+      "_type": "workspace",
+      "name": "Portal DBAMV",
+      "description": "Rotas geradas via portal-scripts â€” API sobre o banco DBAMV (Oracle MV)"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_portal_dbamv",
+      "name": "Base",
+      "data": {
+        "base_url": "http://localhost:8088",
+        "api_key": "uuuuuuuuuuu"
+      }
+    },
+    {
+      "_id": "fld_mv",
+      "_type": "request_group",
+      "parentId": "wrk_portal_dbamv",
+      "name": "MV"
+    },
+    {
+      "_id": "req_get_multiempresas",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Listar Multi Empresas",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/multiempresas",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_get_estoques_consignados",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Estoques com Consignados por Empresa",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/multiempresas/1/estoques",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1"
+        },
+        {
+          "name": "pageSize",
+          "value": "20"
+        }
+      ]
+    },
+    {
+      "_id": "req_get_produtos_consignados",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Produtos Consignados por Empresa e Estoque",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/multiempresas/1/estoques/1/produtos",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1"
+        },
+        {
+          "name": "pageSize",
+          "value": "20"
+        }
+      ]
+    },
+    {
+      "_id": "req_get_estoques_consignados_busca",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Busca Estoques com Consignados (LIKE, sem paginação)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/multiempresas/1/estoques/busca",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "busca",
+          "value": "farm"
+        }
+      ]
+    },
+    {
+      "_id": "req_get_produtos_consignados_busca",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Busca Produtos Consignados (LIKE, sem paginação)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/multiempresas/1/estoques/45/produtos/busca",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "busca",
+          "value": "bal"
+        }
+      ]
+    },
+    {
+      "_id": "req_get_saldo_lote_produto",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Saldo em Lote de Produto por Estoque",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/estoques/45/produtos/5887/saldo-lote",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_get_entradas_por_produto",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Entradas por Produto e Estoque",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/estoques/45/produtos/5887/entradas",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1"
+        },
+        {
+          "name": "pageSize",
+          "value": "20"
+        }
+      ]
+    },
+    {
+      "_id": "req_post_devolver_produto_consignado",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Devolver Produto Consignado",
+      "method": "POST",
+      "url": "{{ _.base_url }}/mv/api/estoques/45/devolucoes",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\"cd_multi_empresa\":1,\"cd_ent_pro\":123456,\"cd_produto_dev\":5887,\"cd_lote_dev\":null,\"dt_validade_dev\":null,\"qt_devolvida\":10,\"cd_produto_ent\":5907,\"cd_lote_ent\":null,\"dt_validade_ent\":null,\"qt_entrada\":10,\"dt_devolucao\":\"2026-05-03\"}"
+      }
+    },
+    {
+      "_id": "req_get_produto_detalhe",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Detalhe do Produto (lote/validade)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/produtos/5887",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_get_estoques_consignados_tudo",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Todos Estoques com Consignados (sem filtro de saldo)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/multiempresas/1/estoques/todos",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "busca",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "_id": "req_get_produtos_consignados_tudo",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Todos Produtos Consignados por Estoque (sem filtro de saldo)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/mv/api/multiempresas/1/estoques/45/produtos/todos",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "busca",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "_id": "req_post_transferencia_produto",
+      "_type": "request",
+      "parentId": "fld_mv",
+      "name": "Transferencia de Produto (Fase1+Fase2)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/mv/api/entradas/transferencia",
+      "headers": [
+        {
+          "name": "X-API-KEY",
+          "value": "{{ _.api_key }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\"cabecas_json\": \"[{\\\"cd_produto\\\":10305,\\\"qt_dev\\\":2,\\\"cd_estoque\\\":30,\\\"cd_fornecedor\\\":null,\\\"cd_mot_dev\\\":8},{\\\"cd_produto\\\":4091,\\\"qt_dev\\\":31,\\\"cd_estoque\\\":30,\\\"cd_fornecedor\\\":null,\\\"cd_mot_dev\\\":8}]\", \"itens_json\": \"[{\\\"cd_produto\\\":12313,\\\"qt_entrada\\\":1,\\\"cd_estoque\\\":30,\\\"cd_fornecedor\\\":37999,\\\"cd_unidade\\\":\\\"UNI\\\",\\\"cd_lote\\\":\\\"1320875\\\",\\\"dt_validade\\\":\\\"31/05/2026\\\"},{\\\"cd_produto\\\":9572,\\\"qt_entrada\\\":1,\\\"cd_estoque\\\":30,\\\"cd_fornecedor\\\":37999,\\\"cd_unidade\\\":\\\"UNI\\\",\\\"cd_lote\\\":\\\"J2D0012Y\\\",\\\"dt_validade\\\":\\\"31/03/2027\\\"}]\"}"
+      }
+    }
+  ]
 }
