@@ -1,0 +1,51 @@
+[
+  {
+    "chave": "devolver-saldo-consig",
+    "descricao": "Devolucao de produto consignado ao fornecedor (v5). FEFO por LOT_PRO (loop externo) + consumo por ITENT_PRO/ITLOT_ENT do lote (loop interno), com fallback de quantidade quando nao houver ITLOT_ENT. Atualiza EST_CONSIG_FORN com sentinela durante o loop e recalcula ao final. Valida integridade exigindo qt_total_devolvida == qt_solicitada.",
+    "tipo": "ANONYMOUS",
+    "tipoBanco": "oracle",
+    "sql": "DECLARE v_cp NUMBER := :cd_produto; v_qt NUMBER := :qt_devolvida; v_ce NUMBER := :cd_estoque; v_cf NUMBER := :cd_fornecedor; v_cu VARCHAR2(50) := :cd_unidade; v_mot NUMBER := NVL(:cd_mot_dev,8); v_tp_dev VARCHAR2(1) := NVL(:tp_devolucao,'C'); v_qt_restante NUMBER; v_qt_total_dev NUMBER := 0; v_cd_uni_pro_fixo NUMBER; v_cd_itent_pro_dev NUMBER; v_cd_ent_pro_dev NUMBER; v_cd_uni_pro_dev NUMBER; v_cd_custo_medio_dev NUMBER; v_vl_unitario_dev NUMBER; v_qt_ent_usar NUMBER; v_qt_lote_usar NUMBER; v_cd_devolucao NUMBER; v_cd_itdev_for NUMBER; v_cd_lote VARCHAR2(15); v_dt_validade DATE; v_nr_doc VARCHAR2(15); TYPE t_forn_est_rec IS RECORD ( cd_fornecedor NUMBER, cd_estoque NUMBER ); TYPE t_forn_est_tab IS TABLE OF t_forn_est_rec INDEX BY VARCHAR2(50); v_forn_est_set t_forn_est_tab; v_key_forn_est VARCHAR2(50); v_json_devs CLOB := ''; v_sep_dev VARCHAR2(2) := ''; v_vl_total_dev NUMBER; BEGIN DBAMV.PKG_MV2000.ATRIBUI_EMPRESA(1); v_qt_restante := v_qt; IF v_cu IS NOT NULL THEN BEGIN SELECT CD_UNI_PRO INTO v_cd_uni_pro_fixo FROM DBAMV.UNI_PRO WHERE CD_PRODUTO = v_cp AND CD_UNIDADE = v_cu AND SN_ATIVO = 'S' AND ROWNUM = 1; EXCEPTION WHEN NO_DATA_FOUND THEN RAISE_APPLICATION_ERROR(-20001, 'Unidade \"' || v_cu || '\" nao encontrada para o produto ' || v_cp); END; END IF; FOR r_lot IN (SELECT CD_LOT_PRO, QT_ESTOQUE_ATUAL, CD_LOTE, DT_VALIDADE FROM DBAMV.LOT_PRO WHERE CD_PRODUTO = v_cp AND (v_ce IS NULL OR CD_ESTOQUE = v_ce) AND QT_ESTOQUE_ATUAL > 0 AND NVL(SN_BLOQUEIO, 'N') = 'N' ORDER BY DT_VALIDADE, CD_LOT_PRO) LOOP EXIT WHEN v_qt_restante <= 0; v_qt_lote_usar := LEAST(v_qt_restante, r_lot.QT_ESTOQUE_ATUAL); FOR r_ent IN (SELECT e.CD_ENT_PRO, e.CD_FORNECEDOR, e.CD_ESTOQUE, i.CD_ITENT_PRO, i.CD_UNI_PRO, i.CD_CUSTO_MEDIO, NVL(i.VL_UNITARIO, 0) AS VL_UNITARIO, il.CD_LOTE, il.DT_VALIDADE, CASE WHEN il.CD_ITENT_PRO IS NOT NULL THEN il.QT_ENT_PRO - NVL(il.QT_DEVOLVIDO, 0) ELSE i.QT_ENTRADA - NVL(i.QT_DEVOLVIDA, 0) END AS QT_DISP_ENT FROM DBAMV.ITENT_PRO i JOIN DBAMV.ENT_PRO e ON e.CD_ENT_PRO = i.CD_ENT_PRO LEFT JOIN DBAMV.ITLOT_ENT il ON il.CD_ITENT_PRO = i.CD_ITENT_PRO WHERE i.CD_PRODUTO = v_cp AND (v_ce IS NULL OR e.CD_ESTOQUE = v_ce) AND (v_cf IS NULL OR e.CD_FORNECEDOR = v_cf) AND e.TP_DOCUMENTO_ENTRADA = 'C' AND NVL(il.CD_LOTE, '@@@') = NVL(r_lot.CD_LOTE, '@@@') AND NVL(il.DT_VALIDADE, TRUNC(SYSDATE)) = NVL(r_lot.DT_VALIDADE, TRUNC(SYSDATE)) AND CASE WHEN il.CD_ITENT_PRO IS NOT NULL THEN il.QT_ENT_PRO - NVL(il.QT_DEVOLVIDO, 0) ELSE i.QT_ENTRADA - NVL(i.QT_DEVOLVIDA, 0) END > 0 ORDER BY e.DT_ENTRADA, i.CD_ITENT_PRO) LOOP EXIT WHEN v_qt_lote_usar <= 0; v_qt_ent_usar := LEAST(v_qt_lote_usar, r_ent.QT_DISP_ENT); v_cd_itent_pro_dev := r_ent.CD_ITENT_PRO; v_cd_ent_pro_dev := r_ent.CD_ENT_PRO; v_cd_uni_pro_dev := NVL(v_cd_uni_pro_fixo, r_ent.CD_UNI_PRO); v_cd_custo_medio_dev := r_ent.CD_CUSTO_MEDIO; v_vl_unitario_dev := r_ent.VL_UNITARIO; v_cd_lote := r_ent.CD_LOTE; v_dt_validade := r_ent.DT_VALIDADE; SELECT DBAMV.SEQ_DEV_FOR.NEXTVAL INTO v_cd_devolucao FROM DUAL; v_nr_doc := 'IMP' || TO_CHAR(v_cd_devolucao); INSERT INTO DBAMV.DEV_FOR (CD_DEVOLUCAO, CD_ENT_PRO, CD_MOT_DEV, DT_DEVOLUCAO, HR_DEVOLUCAO, DT_EMISSAO, TP_DEVOLUCAO, CD_TIP_DOC, NR_DOCUMENTO, VL_TOTAL) VALUES (v_cd_devolucao, v_cd_ent_pro_dev, v_mot, TRUNC(SYSDATE), SYSDATE, TRUNC(SYSDATE), v_tp_dev, 5, v_nr_doc, v_vl_unitario_dev * v_qt_ent_usar); UPDATE DBAMV.EST_CONSIG_FORN SET QT_ESTOQUE_CONSIGNADO = 9999999999 WHERE CD_PRODUTO = v_cp AND CD_FORNECEDOR = r_ent.CD_FORNECEDOR AND CD_ESTOQUE = r_ent.CD_ESTOQUE; SELECT DBAMV.SEQ_ITDEV_FOR.NEXTVAL INTO v_cd_itdev_for FROM DUAL; INSERT INTO DBAMV.ITDEV_FOR (CD_ITDEV_FOR, CD_PRODUTO, CD_DEVOLUCAO, CD_UNI_PRO, QT_DEVOLVIDA, CD_CUSTO_MEDIO, CD_ITENT_PRO, DT_GRAVACAO, CD_LOTE, DT_VALIDADE) VALUES (v_cd_itdev_for, v_cp, v_cd_devolucao, v_cd_uni_pro_dev, v_qt_ent_usar, v_cd_custo_medio_dev, v_cd_itent_pro_dev, SYSDATE, v_cd_lote, v_dt_validade); v_key_forn_est := r_ent.CD_FORNECEDOR || '_' || r_ent.CD_ESTOQUE; v_forn_est_set(v_key_forn_est).cd_fornecedor := r_ent.CD_FORNECEDOR; v_forn_est_set(v_key_forn_est).cd_estoque := r_ent.CD_ESTOQUE; v_vl_total_dev := v_vl_unitario_dev * v_qt_ent_usar; v_json_devs := v_json_devs || v_sep_dev || '{\"cd_devolucao\":' || v_cd_devolucao || ',\"cd_itdev_for\":' || v_cd_itdev_for || ',\"cd_ent_pro\":' || v_cd_ent_pro_dev || ',\"cd_itent_pro\":' || v_cd_itent_pro_dev || ',\"cd_fornecedor\":' || r_ent.CD_FORNECEDOR || ',\"cd_estoque\":' || r_ent.CD_ESTOQUE || ',\"cd_uni_pro\":' || v_cd_uni_pro_dev || ',\"cd_custo_medio\":' || v_cd_custo_medio_dev || ',\"cd_lote\":' || CASE WHEN v_cd_lote IS NOT NULL THEN '\"' || v_cd_lote || '\"' ELSE 'null' END || ',\"dt_validade\":' || CASE WHEN v_dt_validade IS NOT NULL THEN '\"' || TO_CHAR(v_dt_validade, 'DD/MM/YYYY') || '\"' ELSE 'null' END || ',\"qt_devolvida\":' || v_qt_ent_usar || ',\"vl_total\":' || v_vl_total_dev || '}'; v_sep_dev := ','; v_qt_lote_usar := v_qt_lote_usar - v_qt_ent_usar; v_qt_total_dev := v_qt_total_dev + v_qt_ent_usar; v_qt_restante := v_qt_restante - v_qt_ent_usar; END LOOP; END LOOP; v_key_forn_est := v_forn_est_set.FIRST; WHILE v_key_forn_est IS NOT NULL LOOP UPDATE DBAMV.EST_CONSIG_FORN SET QT_ESTOQUE_CONSIGNADO = (NVL(QT_ESTOQUE_CONSUMIDO, 0) + NVL(QT_BAIXADA, 0)) - NVL(QT_ESTOQUE_TRANSFERENCIA, 0) WHERE CD_PRODUTO = v_cp AND CD_FORNECEDOR = v_forn_est_set(v_key_forn_est).cd_fornecedor AND CD_ESTOQUE = v_forn_est_set(v_key_forn_est).cd_estoque; v_key_forn_est := v_forn_est_set.NEXT(v_key_forn_est); END LOOP; IF v_qt_total_dev = 0 THEN RAISE_APPLICATION_ERROR(-20002, 'Nenhum saldo disponivel em EST_CONSIG_FORN para o produto ' || v_cp || CASE WHEN v_cf IS NOT NULL THEN ' (forn=' || v_cf || ')' ELSE '' END || CASE WHEN v_ce IS NOT NULL THEN ' (est=' || v_ce || ')' ELSE '' END); END IF; IF v_qt_total_dev <> v_qt THEN RAISE_APPLICATION_ERROR(-20003, 'Devolucao cancelada: soma dos itens ITDEV_FOR (' || v_qt_total_dev || ') diferente do total solicitado (' || v_qt || '). Saldo insuficiente - operacao revertida.'); END IF; COMMIT; :result_out:=( '{\"status\":\"ok\"' || ',\"qt_solicitada\":' || v_qt || ',\"qt_total_devolvida\":' || v_qt_total_dev || CASE WHEN v_qt_restante > 0 THEN ',\"qt_nao_atendida\":' || v_qt_restante || ',\"aviso\":\"Saldo insuficiente - devolucao parcial executada\"' ELSE '' END || ',\"devolucoes\":[' || v_json_devs || ']}' ); EXCEPTION WHEN OTHERS THEN ROLLBACK; :result_out:=('{\"status\":\"erro\",\"mensagem\":\"' || SQLERRM || '\"}'); END;",
+    "parametros": [
+      {
+        "nome": "cd_produto",
+        "tipo": "number",
+        "obrigatorio": true
+      },
+      {
+        "nome": "qt_devolvida",
+        "tipo": "number",
+        "obrigatorio": true
+      },
+      {
+        "nome": "cd_estoque",
+        "tipo": "number",
+        "obrigatorio": false
+      },
+      {
+        "nome": "cd_fornecedor",
+        "tipo": "number",
+        "obrigatorio": false
+      },
+      {
+        "nome": "cd_unidade",
+        "tipo": "string",
+        "obrigatorio": false
+      },
+      {
+        "nome": "cd_mot_dev",
+        "tipo": "number",
+        "obrigatorio": false
+      },
+      {
+        "nome": "tp_devolucao",
+        "tipo": "string",
+        "obrigatorio": false
+      },
+      {
+        "nome": "result_out",
+        "tipo": "out",
+        "obrigatorio": false
+      }
+    ]
+  }
+]
